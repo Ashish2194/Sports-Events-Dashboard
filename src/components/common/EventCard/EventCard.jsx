@@ -1,4 +1,5 @@
 import React from "react";
+import CONSTANTS from "../../../constants";
 import { getFormattedTime } from "../../../util/util";
 
 import "./EventCard.css";
@@ -7,10 +8,11 @@ const EventCard = ({id, category, name, startTime, endTime, onEventClick, type, 
     
 
     const getEnum = category => {
+        const {SPORTS_CATEGORY:{ATHLETICS, BOXING, SWIMMING}} = CONSTANTS;
         switch(category) {
-            case "Swimming": return "S";
-            case "Boxing": return "B";
-            case "Athletics": return "A";
+            case SWIMMING.NAME: return SWIMMING.ABBREVIATION;
+            case BOXING.NAME: return BOXING.ABBREVIATION;
+            case ATHLETICS.NAME: return ATHLETICS.ABBREVIATION;
             default:
                 return "-";
         }

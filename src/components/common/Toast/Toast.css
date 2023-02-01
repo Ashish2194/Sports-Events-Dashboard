@@ -1,0 +1,44 @@
+.toast {
+    min-width: 250px;
+    padding: 14px;
+    background-color: #1b1a1a;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    color: white;
+    text-align: center;
+    position: fixed;
+    top: 30px;
+    right: 15%;
+    z-index: 1;
+    animation: fadein 0.5s, fadeout 0.5s 4.6s;
+  }
+  
+  .success {
+    background-color: #269c3f;
+  }
+  .error {
+    background-color: #c55744;
+  }
+  
+  @keyframes fadein {
+    from {
+      right: -30%;
+      opacity: 0;
+    }
+    to {
+      right: 15%;
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fadeout {
+    from {
+      right: 15%;
+      opacity: 1;
+    }
+    to {
+      right: -30%;
+      opacity: 0;
+    }
+  }
+  
