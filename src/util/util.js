@@ -3,3 +3,7 @@ export const getFormattedTime = (startTime, endTime) => {
     const endingTime = new Date(endTime).getHours();
     return `${startingTime}${startingTime<12 ? 'AM':'PM'} - ${endingTime}${endingTime<12 ? 'AM':'PM'}`;
 };
+
+export const getEventNameInLowerCase = (name) => {
+    return name.toLowerCase();
+}

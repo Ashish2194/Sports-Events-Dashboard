@@ -1,18 +1,17 @@
-
 .container {
-    display: flex;
-    color: #a240d0;
-    background: #212020;
-    border: 1px solid #a240d0;
-    min-height: 100vh;
-  }
-  
-  .selected__events__container {
-    border-left: 2px solid #a240d0;
-  }
+  display: flex;
+  color: #a240d0;
+  background: #212020;
+  border: 1px solid #a240d0;
+  min-height: 100vh;
+}
 
-  @media only screen and (max-width: 750px) {
-    .container {
-      flex-wrap: wrap;
-    }
+.selected__events__container {
+  border-left: 2px solid #a240d0;
+}
+
+@media only screen and (max-width: 750px) {
+  .container {
+    flex-wrap: wrap;
   }
+}

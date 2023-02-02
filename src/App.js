@@ -7,8 +7,7 @@ import SportsEventDashboard from './components/SportsEventsDashboard/SportsEvent
 function App() {
 
   const myErrorHandler = (error, info) => {
-    // Do something with the error
-    // E.g. log to an error logging client here
+    /**In real production code I would have used it to log errors to reporting service */
     console.log(error)
     console.log(info)
   }
@@ -18,7 +17,6 @@ function App() {
       <ErrorBoundary FallbackComponent={FallBackUI} onError={myErrorHandler}>
         <SportsEventDashboard />
       </ErrorBoundary>
-
     </>
   );
 }
