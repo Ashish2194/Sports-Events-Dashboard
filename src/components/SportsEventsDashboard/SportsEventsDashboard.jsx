@@ -34,6 +34,7 @@ const SportsEventDashboard = () => {
     }, []);
 
     const groupByResults = (results) => {
+        // Group all events based on category they fall in
         return results.reduce((acc, curr) => {
             const { id, event_name, event_category, start_time, end_time } = curr;
             if (acc[event_category]) {
@@ -46,8 +47,10 @@ const SportsEventDashboard = () => {
     }
 
     const getFilteredEvents = (id, eventSource, type) => {
+        // filter based on event id and group events based on category
         return Object.entries(eventSource).reduce((acc, [eventCategory, categoryEvents]) => {
             acc[eventCategory] = categoryEvents.filter(item => item.id !== id);
+            // Remove any categoryKey that does not have events and operation type was remove
             if (!acc[eventCategory].length && type === CONSTANTS.BUTTON_TYPES.REMOVE)
                 delete acc[eventCategory];
             return acc;
@@ -84,6 +87,7 @@ const SportsEventDashboard = () => {
             dispatch({
                 type: ACTION_TYPES.UPDATE_FILTERED_EVENTS,
                 payload: {
+                     // if filtered events are null, update state with null to show empty message
                     filteredEvents: !Object.keys(filteredResults).length ? null : filteredResults
                 }
             });
@@ -91,6 +95,7 @@ const SportsEventDashboard = () => {
     }
 
     const selectEventHandler = (id, category, type) => {
+        // Show error toast if user tries to select more than 3 events
         if (count === CONSTANTS.MAX_SELECTION_CAP && type === CONSTANTS.BUTTON_TYPES.SELECT) {
             dispatch({ type: ACTION_TYPES.SHOW_TOAST, payload: { showToast: true } })
             return;
@@ -98,6 +103,7 @@ const SportsEventDashboard = () => {
         const selectedEvent = events[category].filter(event => event.id === id);
         const currentlySelectedEvents = { ...selectedEvents };
         const currSelectedIdMap = { ...selectedIdMap };
+        // Update filteredResults to not include selected events and increase count
         if (type === CONSTANTS.BUTTON_TYPES.SELECT) {
             const { start_time, end_time } = selectedEvent[0];
             const time = getFormattedTime(start_time, end_time);
@@ -107,12 +113,15 @@ const SportsEventDashboard = () => {
                 currentlySelectedEvents[category] = [...selectedEvent]
             }
             const filteredResults = getFilteredEvents(id, filteredEvents, type);
-            currSelectedIdMap[id] = time;
+            // here we are storing selectedId: timestamp in string, so that we can quickly lookup for event ids having same timestamp.
+            currSelectedIdMap[id] = time; 
             dispatch({ type: ACTION_TYPES.UPDATE_FILTERED_EVENTS, payload: { filteredEvents: filteredResults } });
             dispatch({ type: ACTION_TYPES.UPDATE_SELECTED_EVENTS, payload: { selectedEvents: currentlySelectedEvents } });
             dispatch({ type: ACTION_TYPES.UPDATE_EVENT_COUNT, payload: { count: count + 1 } });
         } else {
+            // If user removes an event, decrement the count and update the filtered items to again include the event
             const selectedEventsFiltered = getFilteredEvents(id, currentlySelectedEvents, type);
+            // delete from selectedIdMap if user remove the event
             delete currSelectedIdMap[id];
             if (filteredEvents) {
                 const currentFilteredItems = { ...filteredEvents }
@@ -122,6 +131,7 @@ const SportsEventDashboard = () => {
             dispatch({
                 type: ACTION_TYPES.UPDATE_SELECTED_EVENTS,
                 payload: {
+                    // if selected events are null, update state with null to show empty message
                     selectedEvents: !Object.keys(selectedEventsFiltered).length ? null : selectedEventsFiltered
                 }
             });

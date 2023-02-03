@@ -6,11 +6,11 @@ import SportsEventDashboard from './components/SportsEventsDashboard/SportsEvent
 import SportsEventReducer from './reducers/SportsEventReducer/SportsEventReducer';
 
 export const initialState = {
-  events: [],
+  events: null, // Since the api does not support search, we need to store the original set of events and filter on it and pass to filtered events
   filteredEvents: null,
   selectedEvents: null,
-  selectedIdMap: {},
-  count: 0,
+  selectedIdMap: {}, // Keep a map of selectedId:timeStamp to quickly disable events having same time as the selected one
+  count: 0, // for maintaing max count of events user can select
   loading: false,
   showToast: false
 };
