@@ -6,30 +6,22 @@ const SportsEventReducer = (state = initialState, action) => {
         case ACTION_TYPES.UPDATE_EVENTS:
             return {
                 ...state,
-                events: {
-                    ...action.payload.events
-                }
+                events: action.payload.events
             };
         case ACTION_TYPES.UPDATE_FILTERED_EVENTS:
             return {
                 ...state,
-                filteredEvents: {
-                    ...action.payload.filteredEvents
-                }
+                filteredEvents: action.payload.filteredEvents
             };
         case ACTION_TYPES.UPDATE_SELECTED_EVENTS:
             return {
                 ...state,
-                selectedEvents: {
-                    ...action.payload.selectedEvents
-                }
+                selectedEvents: action.payload.selectedEvents
             };
         case ACTION_TYPES.UPDATE_SELECTED_ID_MAP:
             return {
                 ...state,
-                selectedIdMap: {
-                    ...action.payload.selectedIdMap
-                }
+                selectedIdMap: action.payload.selectedIdMap
             };
         case ACTION_TYPES.UPDATE_EVENT_COUNT:
             return {

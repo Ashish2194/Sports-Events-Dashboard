@@ -9,6 +9,7 @@ import { useErrorHandler } from 'react-error-boundary'
 import Loader from '../common/Loader/Loader';
 import { SportsEventContext } from '../../App';
 import { ACTION_TYPES } from '../../reducers/SportsEventReducer/actionTypes';
+import EmptyResults from '../common/EmptyResults/EmptyResults';
 
 const SportsEventDashboard = () => {
     const { state, dispatch } = useContext(SportsEventContext);
@@ -76,9 +77,16 @@ const SportsEventDashboard = () => {
                     }
                     return getEventNameInLowerCase(item.event_name).includes(trimmedValue.toLowerCase())
                 });
+                if (!acc[eventCategory].length)
+                    delete acc[eventCategory]; // remove event categoryKey if no events match the search
                 return acc;
             }, {});
-            dispatch({ type: ACTION_TYPES.UPDATE_FILTERED_EVENTS, payload: { filteredEvents: filteredResults } });
+            dispatch({
+                type: ACTION_TYPES.UPDATE_FILTERED_EVENTS,
+                payload: {
+                    filteredEvents: !Object.keys(filteredResults).length ? null : filteredResults
+                }
+            });
         }
     }
 
@@ -106,40 +114,53 @@ const SportsEventDashboard = () => {
         } else {
             const selectedEventsFiltered = getFilteredEvents(id, currentlySelectedEvents, type);
             delete currSelectedIdMap[id];
-            const currentFilteredItems = { ...filteredEvents }
-            currentFilteredItems[category].push(...selectedEvent);
+            if (filteredEvents) {
+                const currentFilteredItems = { ...filteredEvents }
+                currentFilteredItems[category].push(...selectedEvent);
+                dispatch({ type: ACTION_TYPES.UPDATE_FILTERED_EVENTS, payload: { filteredEvents: currentFilteredItems } });
+            }
+            dispatch({
+                type: ACTION_TYPES.UPDATE_SELECTED_EVENTS,
+                payload: {
+                    selectedEvents: !Object.keys(selectedEventsFiltered).length ? null : selectedEventsFiltered
+                }
+            });
 
-            dispatch({ type: ACTION_TYPES.UPDATE_SELECTED_EVENTS, payload: { selectedEvents: selectedEventsFiltered } });
-            dispatch({ type: ACTION_TYPES.UPDATE_FILTERED_EVENTS, payload: { filteredEvents: currentFilteredItems } });
             dispatch({ type: ACTION_TYPES.UPDATE_EVENT_COUNT, payload: { count: count - 1 } });
         }
         dispatch({ type: ACTION_TYPES.UPDATE_SELECTED_ID_MAP, payload: { selectedIdMap: currSelectedIdMap } });
     }
 
     const renderEvents = () => {
+        console.log(filteredEvents)
         return <>
-            <div>
+            <div className='all__events__container'>
                 <Header
                     hasSearchBar
                     title={CONSTANTS.HEADER.ALL_EVENTS}
                     onSearchHandler={searchByEventsNameHandler}
                 />
-                <SportsEventsList
-                    events={filteredEvents}
-                    onEventSelect={selectEventHandler}
-                    tileType={CONSTANTS.BUTTON_TYPES.SELECT}
-                />
+                {!filteredEvents ? <EmptyResults message={"No events found!!"} /> :
+                    <SportsEventsList
+                        events={filteredEvents}
+                        onEventSelect={selectEventHandler}
+                        tileType={CONSTANTS.BUTTON_TYPES.SELECT}
+                    />
+                }
+
             </div>
             <div className='selected__events__container'>
                 <Header
                     hasSearchBar={false}
                     title={CONSTANTS.HEADER.SELECTED_EVENTS}
                 />
-                <SportsEventsList
-                    events={selectedEvents}
-                    onEventSelect={selectEventHandler}
-                    tileType={CONSTANTS.BUTTON_TYPES.REMOVE}
-                />
+                {!selectedEvents ? <EmptyResults message={"No events selected!!"} /> :
+                    <SportsEventsList
+                        events={selectedEvents}
+                        onEventSelect={selectEventHandler}
+                        tileType={CONSTANTS.BUTTON_TYPES.REMOVE}
+                    />
+                }
             </div>
         </>
     }

@@ -6,12 +6,27 @@
   min-height: 100vh;
 }
 
+.all__events__container {
+  flex-basis: 75%;
+  position: relative;
+}
 .selected__events__container {
   border-left: 2px solid #a240d0;
+  position: relative;
+  flex-basis: 25%;
 }
 
 @media only screen and (max-width: 750px) {
   .container {
     flex-wrap: wrap;
+  }
+  .all__events__container {
+    flex-basis: 100%;
+    position: relative;
+  }
+  .selected__events__container {
+    border-left: 2px solid #a240d0;
+    flex-basis: 100%;
+    position: relative;
   }
 }

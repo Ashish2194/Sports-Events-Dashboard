@@ -4,7 +4,7 @@ import './Header.css';
 
 const Header = ({ title, hasSearchBar, onSearchHandler }) => {
     return <>
-        <header>
+        <header className={!hasSearchBar ? 'padded_header':''}>
             <h2>{title}</h2>
             {hasSearchBar && <SearchBar onChange={onSearchHandler} />}
         </header>

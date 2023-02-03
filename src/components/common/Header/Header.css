@@ -4,4 +4,9 @@ header {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
+    border-bottom: 2px solid;
+  }
+  .padded_header {
+    padding: 17px;
+    border-top: 2px solid;
   }

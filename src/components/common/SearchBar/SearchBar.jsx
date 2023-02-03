@@ -6,7 +6,7 @@ const SearchBar = ({ onChange }) => {
   return <div className="searchContainer">
     <form className="nosubmit" onSubmit={e => e.preventDefault()}>
       <input className="nosubmit" type="search"
-        placeholder={CONSTANTS.SEARCH_PLACEHOLDER} onChange={onChange} />
+        placeholder={CONSTANTS.SEARCH_PLACEHOLDER} onChange={onChange} data-testid="searchBar" />
     </form>
   </div>
 }

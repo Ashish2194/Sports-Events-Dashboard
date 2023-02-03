@@ -7,8 +7,8 @@ import SportsEventReducer from './reducers/SportsEventReducer/SportsEventReducer
 
 export const initialState = {
   events: [],
-  filteredEvents: [],
-  selectedEvents: [],
+  filteredEvents: null,
+  selectedEvents: null,
   selectedIdMap: {},
   count: 0,
   loading: false,

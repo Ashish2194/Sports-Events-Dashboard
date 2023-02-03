@@ -6,7 +6,7 @@ const Toast = ({ message, onDismiss, type }) => {
     setTimeout(() => onDismiss(), 5000);
   }, [onDismiss]);
 
-  return <div className={`toast ${type ? type : ""}`}>{message}</div>;
+  return <div data-testid="toast" className={`toast ${type ? type : ""}`}>{message}</div>;
 };
 
 export default Toast;
