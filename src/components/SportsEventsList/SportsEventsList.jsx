@@ -2,7 +2,7 @@ import React from "react";
 import SportsEventCategory from "../SportsEventCategory/SportsEventCategory";
 import "./SportsEventsList.css";
 
-const SportsEventsList = ({ events, tileType, selectedIds, onEventSelect }) => {
+const SportsEventsList = ({ events, tileType, onEventSelect }) => {
 
     const renderEventList = (eventsObj, tileType) => {
         return <>
@@ -12,7 +12,6 @@ const SportsEventsList = ({ events, tileType, selectedIds, onEventSelect }) => {
                     categoryName={categoryKey}
                     events={categoryEvents}
                     tileType={tileType}
-                    selectedIds={selectedIds}
                     onEventSelect={onEventSelect}
                 />
             })}

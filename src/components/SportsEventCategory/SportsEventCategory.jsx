@@ -1,15 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
+import { SportsEventContext } from "../../App";
 import CONSTANTS from "../../constants";
 import { getFormattedTime } from "../../util/util";
 import EventCard from "../common/EventCard/EventCard";
 import './SportsEventCategory.css';
 
-const SportsEventCategory = ({ categoryName, events, tileType, selectedIds, onEventSelect }) => {
+const SportsEventCategory = ({ categoryName, events, tileType, onEventSelect }) => {
+
+    const {state: {selectedIdMap}} = useContext(SportsEventContext);
 
     const hasConflictingTime = (startTime, endTime) => {
         const timeValue = getFormattedTime(startTime, endTime);
         let flag = false;
-        for (let value of Object.values(selectedIds)) {
+        for (let value of Object.values(selectedIdMap)) {
             if (value === timeValue) {
                 flag = true;
                 break;

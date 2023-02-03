@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import './SportsEventsDashboard.css';
 import { getFormattedTime, getEventNameInLowerCase } from '../../util/util';
 import Toast from '../common/Toast/Toast';
@@ -7,30 +7,26 @@ import Header from '../common/Header/Header';
 import SportsEventsList from '../SportsEventsList/SportsEventsList';
 import { useErrorHandler } from 'react-error-boundary'
 import Loader from '../common/Loader/Loader';
+import { SportsEventContext } from '../../App';
+import { ACTION_TYPES } from '../../reducers/SportsEventReducer/actionTypes';
 
 const SportsEventDashboard = () => {
-
-    const [events, setEvents] = useState([]);
-    const [filteredEvents, setFilteredEvents] = useState([]);
-    const [selectedEvents, setSelectedEvents] = useState({});
-    const [selectedIdMap, setSelectedIdMap] = useState({});
-    const [count, setCount] = useState(0)
-    const [loading, setLoading] = useState(false);
-    const [showToast, setShowToast] = useState(false);
+    const { state, dispatch } = useContext(SportsEventContext);
+    const { events, filteredEvents, selectedEvents, selectedIdMap, count, loading, showToast } = state;
     const handleError = useErrorHandler();
 
     useEffect(() => {
         const fetchEvents = async () => {
-            setLoading(true);
+            dispatch({ type: ACTION_TYPES.TOGGLE_LOADING, payload: { loading: true } })
             try {
                 const response = await fetch(CONSTANTS.API_URL);
                 const results = await response.json();
-                setEvents(groupByResults(results));
-                setFilteredEvents(groupByResults(results));
-                setLoading(false)
+                dispatch({ type: ACTION_TYPES.UPDATE_EVENTS, payload: { events: groupByResults(results) } })
+                dispatch({ type: ACTION_TYPES.UPDATE_FILTERED_EVENTS, payload: { filteredEvents: groupByResults(results) } })
+                dispatch({ type: ACTION_TYPES.TOGGLE_LOADING, payload: { loading: false } })
             } catch (err) {
+                dispatch({ type: ACTION_TYPES.TOGGLE_LOADING, payload: { loading: false } });
                 handleError(err);
-                setLoading(false)
             }
         }
         fetchEvents();
@@ -68,27 +64,27 @@ const SportsEventDashboard = () => {
                     });
                     return acc;
                 }, {});
-                setFilteredEvents(eventsWithoutSelectedEvents);
+                dispatch({ type: ACTION_TYPES.UPDATE_FILTERED_EVENTS, payload: { filteredEvents: eventsWithoutSelectedEvents } });
             } else
-                setFilteredEvents(events); // If no selected events, reset to all events loaded initially
+                dispatch({ type: ACTION_TYPES.UPDATE_FILTERED_EVENTS, payload: { filteredEvents: events } }); // If no selected events, reset to all events loaded initially
         } else {
             // Search by event name but not include the already selected events
             const filteredResults = Object.entries(events).reduce((acc, [eventCategory, categoryEvents]) => {
                 acc[eventCategory] = categoryEvents.filter(item => {
                     if (selectedIds.length) {
                         return (getEventNameInLowerCase(item.event_name).includes(trimmedValue.toLowerCase()) && !selectedIds.includes(item.id))
-                    } 
+                    }
                     return getEventNameInLowerCase(item.event_name).includes(trimmedValue.toLowerCase())
                 });
                 return acc;
             }, {});
-            setFilteredEvents(filteredResults);
+            dispatch({ type: ACTION_TYPES.UPDATE_FILTERED_EVENTS, payload: { filteredEvents: filteredResults } });
         }
     }
 
     const selectEventHandler = (id, category, type) => {
         if (count === CONSTANTS.MAX_SELECTION_CAP && type === CONSTANTS.BUTTON_TYPES.SELECT) {
-            setShowToast(true);
+            dispatch({ type: ACTION_TYPES.SHOW_TOAST, payload: { showToast: true } })
             return;
         }
         const selectedEvent = events[category].filter(event => event.id === id);
@@ -104,19 +100,20 @@ const SportsEventDashboard = () => {
             }
             const filteredResults = getFilteredEvents(id, filteredEvents, type);
             currSelectedIdMap[id] = time;
-            setFilteredEvents(filteredResults);
-            setSelectedEvents(currentlySelectedEvents);
-            setCount(count + 1)
+            dispatch({ type: ACTION_TYPES.UPDATE_FILTERED_EVENTS, payload: { filteredEvents: filteredResults } });
+            dispatch({ type: ACTION_TYPES.UPDATE_SELECTED_EVENTS, payload: { selectedEvents: currentlySelectedEvents } });
+            dispatch({ type: ACTION_TYPES.UPDATE_EVENT_COUNT, payload: { count: count + 1 } });
         } else {
             const selectedEventsFiltered = getFilteredEvents(id, currentlySelectedEvents, type);
             delete currSelectedIdMap[id];
             const currentFilteredItems = { ...filteredEvents }
             currentFilteredItems[category].push(...selectedEvent);
-            setSelectedEvents(selectedEventsFiltered)
-            setFilteredEvents(currentFilteredItems);
-            setCount(count - 1)
+
+            dispatch({ type: ACTION_TYPES.UPDATE_SELECTED_EVENTS, payload: { selectedEvents: selectedEventsFiltered } });
+            dispatch({ type: ACTION_TYPES.UPDATE_FILTERED_EVENTS, payload: { filteredEvents: currentFilteredItems } });
+            dispatch({ type: ACTION_TYPES.UPDATE_EVENT_COUNT, payload: { count: count - 1 } });
         }
-        setSelectedIdMap(currSelectedIdMap);
+        dispatch({ type: ACTION_TYPES.UPDATE_SELECTED_ID_MAP, payload: { selectedIdMap: currSelectedIdMap } });
     }
 
     const renderEvents = () => {
@@ -129,7 +126,6 @@ const SportsEventDashboard = () => {
                 />
                 <SportsEventsList
                     events={filteredEvents}
-                    selectedIds={selectedIdMap}
                     onEventSelect={selectEventHandler}
                     tileType={CONSTANTS.BUTTON_TYPES.SELECT}
                 />
@@ -141,7 +137,6 @@ const SportsEventDashboard = () => {
                 />
                 <SportsEventsList
                     events={selectedEvents}
-                    selectedIds={selectedIdMap}
                     onEventSelect={selectEventHandler}
                     tileType={CONSTANTS.BUTTON_TYPES.REMOVE}
                 />
@@ -150,7 +145,7 @@ const SportsEventDashboard = () => {
     }
 
     const onDismiss = () => {
-        setShowToast(false);
+        dispatch({ type: ACTION_TYPES.SHOW_TOAST, payload: { showToast: false } })
     };
 
     return <div className='container'>
