@@ -20,13 +20,8 @@
   .container {
     flex-wrap: wrap;
   }
-  .all__events__container {
+  
+  .all__events__container, .selected__events__container {
     flex-basis: 100%;
-    position: relative;
-  }
-  .selected__events__container {
-    border-left: 2px solid #a240d0;
-    flex-basis: 100%;
-    position: relative;
   }
 }

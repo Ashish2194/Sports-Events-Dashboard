@@ -142,7 +142,6 @@ const SportsEventDashboard = () => {
     }
 
     const renderEvents = () => {
-        console.log(filteredEvents)
         return <>
             <div className='all__events__container'>
                 <Header
