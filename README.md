@@ -17,7 +17,7 @@ You can view the deployed version at https://ashish2194.github.io/Sports-Events-
   
 ![SportsDayEvents-1](https://user-images.githubusercontent.com/25342203/216936866-d70a1700-69c9-4c6d-9ef6-560611e12021.png)
 
- **Sports Event Selection**
+ **Sports Event Selection and Events with clashing time behaviour**
   
 ![SportsDayEvents-2](https://user-images.githubusercontent.com/25342203/216936878-12f9af6b-0522-4b3d-8be0-12d768fc9528.png)
 
