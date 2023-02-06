@@ -123,7 +123,11 @@ const SportsEventDashboard = () => {
             const selectedEventsFiltered = getFilteredEvents(id, currentlySelectedEvents, type);
             // delete from selectedIdMap if user remove the event
             delete currSelectedIdMap[id];
-            if (filteredEvents) {
+            /**
+             * Added functionality where once you select an item and then do search and then deselect the item from  selected item list,
+             *  now it would again be part of search results
+             */
+            if (filteredEvents) { 
                 const currentFilteredItems = { ...filteredEvents }
                 currentFilteredItems[category].push(...selectedEvent);
                 dispatch({ type: ACTION_TYPES.UPDATE_FILTERED_EVENTS, payload: { filteredEvents: currentFilteredItems } });

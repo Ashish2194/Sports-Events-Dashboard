@@ -13,7 +13,7 @@ const SportsEventCategory = ({ categoryName, events, tileType, onEventSelect }) 
         const timeValue = getFormattedTime(startTime, endTime);
         let flag = false;
         for (let value of Object.values(selectedIdMap)) {
-            if (value === timeValue) {
+            if (value === timeValue) { // If the constructed time value matches any of the values in selectedIdMap, return true
                 flag = true;
                 break;
             }
@@ -25,7 +25,7 @@ const SportsEventCategory = ({ categoryName, events, tileType, onEventSelect }) 
         return tileType === CONSTANTS.BUTTON_TYPES.SELECT && hasConflictingTime(start_time, end_time);
     }
 
-    if(!events.length)
+    if(!events.length) // If no events for a particular category, no need to show the event category container
         return null;
 
     return <>
