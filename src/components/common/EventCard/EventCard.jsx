@@ -25,7 +25,14 @@ const EventCard = ({ id, category, name, startTime, endTime, onEventClick, type,
             <div className="event__details__title">{name}</div>
             <div className="event__details__category">{`(${category})`}</div>
             <div className="event__details__time" data-testid={`eventDetailsTime-${id}`}>{getFormattedTime(startTime, endTime)}</div>
-            <button data-testid={`eventButton-${id}`} disabled={disabled} className={`event__details__button-${type.toLowerCase()}${disabled ? ' disabled-btn ' : ''}`} onClick={() => onEventClick(id, category, type)}>{type}</button>
+            <button
+             data-testid={`eventButton-${id}`}
+             disabled={disabled}
+             className={`event__details__button-${type.toLowerCase()}${disabled ? ' disabled-btn ' : ''}`} 
+             onClick={() => onEventClick(id, category, type)}
+             >
+                {type}
+            </button>
         </div>
     </div>
 };
