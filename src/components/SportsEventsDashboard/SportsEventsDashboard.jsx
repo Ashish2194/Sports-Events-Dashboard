@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import './SportsEventsDashboard.css';
-import { getFormattedTime, getEventNameInLowerCase } from '../../util/util';
+import { getFormattedTime, getEventNameInLowerCase, groupByResults } from '../../util/util';
 import Toast from '../common/Toast/Toast';
 import CONSTANTS from '../../constants';
 import Header from '../common/Header/Header';
@@ -22,8 +22,9 @@ const SportsEventDashboard = () => {
             try {
                 const response = await fetch(CONSTANTS.API_URL);
                 const results = await response.json();
-                dispatch({ type: ACTION_TYPES.UPDATE_EVENTS, payload: { events: groupByResults(results) } })
-                dispatch({ type: ACTION_TYPES.UPDATE_FILTERED_EVENTS, payload: { filteredEvents: groupByResults(results) } })
+                const groupedByCategoryResults = groupByResults(results);
+                dispatch({ type: ACTION_TYPES.UPDATE_EVENTS, payload: { events: groupedByCategoryResults } })
+                dispatch({ type: ACTION_TYPES.UPDATE_FILTERED_EVENTS, payload: { filteredEvents: groupedByCategoryResults } })
                 dispatch({ type: ACTION_TYPES.TOGGLE_LOADING, payload: { loading: false } })
             } catch (err) {
                 dispatch({ type: ACTION_TYPES.TOGGLE_LOADING, payload: { loading: false } });
@@ -33,50 +34,6 @@ const SportsEventDashboard = () => {
         fetchEvents();
     }, []);
 
-    const groupByResults = (results) => {
-        /**Group all events based on category they fall in 
-         * 
-        {
-            "Swimming": [
-                {
-                    "id": 1,
-                    "event_name": "Butterfly 100M",
-                    "start_time": "2022-12-17 13:00:00",
-                    "end_time": "2022-12-17 14:00:00"
-                },
-                ...
-            ],
-            "Athletics": [
-                {
-                    "id": 4,
-                    "event_name": "High Jump",
-                    "start_time": "2022-12-17 13:00:00",
-                    "end_time": "2022-12-17 14:00:00"
-                },
-                ...
-            ],
-            "Boxing": [
-                {
-                    "id": 8,
-                    "event_name": "Lightweight 60kg",
-                    "start_time": "2022-12-17 18:00:00",
-                    "end_time": "2022-12-17 19:00:00"
-                },
-                ...
-            ]
-        }
-         * 
-         * **/
-        return results.reduce((acc, curr) => {
-            const { id, event_name, event_category, start_time, end_time } = curr;
-            if (acc[event_category]) {
-                acc[event_category].push({ id, event_name, start_time, end_time });
-            } else {
-                acc[event_category] = [{ id, event_name, start_time, end_time }];
-            }
-            return acc;
-        }, {});
-    }
 
     const getFilteredEvents = (id, eventSource, type) => {
         // filter based on event id and group events based on category
@@ -185,7 +142,7 @@ const SportsEventDashboard = () => {
                     title={CONSTANTS.HEADER.ALL_EVENTS}
                     onSearchHandler={searchByEventsNameHandler}
                 />
-                {!filteredEvents ? <EmptyResults message={"No events found!!"} /> :
+                {!filteredEvents ? <EmptyResults message={CONSTANTS.EMPTY_ALL_EVENTS} /> :
                     <SportsEventsList
                         events={filteredEvents}
                         onEventSelect={selectEventHandler}
@@ -199,7 +156,7 @@ const SportsEventDashboard = () => {
                     hasSearchBar={false}
                     title={CONSTANTS.HEADER.SELECTED_EVENTS}
                 />
-                {!selectedEvents ? <EmptyResults message={"No events selected!!"} /> :
+                {!selectedEvents ? <EmptyResults message={CONSTANTS.EMPTY_SELECTED_EVENTS} /> :
                     <SportsEventsList
                         events={selectedEvents}
                         onEventSelect={selectEventHandler}

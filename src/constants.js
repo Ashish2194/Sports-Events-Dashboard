@@ -29,7 +29,9 @@ const CONSTANTS = {
         SELECTED_EVENTS: "Selected Events"
     },
     MAX_SELECTION_CAP: 3,
-    FALLBACK_UI_MESSAGE: "Something really went wrong and we are on it...."
+    FALLBACK_UI_MESSAGE: "Something really went wrong and we are on it....",
+    EMPTY_ALL_EVENTS: "No events found!!",
+    EMPTY_SELECTED_EVENTS:"No events selected!!"
 };
 
 export default CONSTANTS;
