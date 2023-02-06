@@ -34,7 +34,39 @@ const SportsEventDashboard = () => {
     }, []);
 
     const groupByResults = (results) => {
-        // Group all events based on category they fall in
+        /**Group all events based on category they fall in 
+         * 
+        {
+            "Swimming": [
+                {
+                    "id": 1,
+                    "event_name": "Butterfly 100M",
+                    "start_time": "2022-12-17 13:00:00",
+                    "end_time": "2022-12-17 14:00:00"
+                },
+                ...
+            ],
+            "Athletics": [
+                {
+                    "id": 4,
+                    "event_name": "High Jump",
+                    "start_time": "2022-12-17 13:00:00",
+                    "end_time": "2022-12-17 14:00:00"
+                },
+                ...
+            ],
+            "Boxing": [
+                {
+                    "id": 8,
+                    "event_name": "Lightweight 60kg",
+                    "start_time": "2022-12-17 18:00:00",
+                    "end_time": "2022-12-17 19:00:00"
+                },
+                ...
+            ]
+        }
+         * 
+         * **/
         return results.reduce((acc, curr) => {
             const { id, event_name, event_category, start_time, end_time } = curr;
             if (acc[event_category]) {
@@ -87,7 +119,7 @@ const SportsEventDashboard = () => {
             dispatch({
                 type: ACTION_TYPES.UPDATE_FILTERED_EVENTS,
                 payload: {
-                     // if filtered events are null, update state with null to show empty message
+                    // if filtered events are null, update state with null to show empty message
                     filteredEvents: !Object.keys(filteredResults).length ? null : filteredResults
                 }
             });
@@ -114,7 +146,7 @@ const SportsEventDashboard = () => {
             }
             const filteredResults = getFilteredEvents(id, filteredEvents, type);
             // here we are storing selectedId: timestamp in string, so that we can quickly lookup for event ids having same timestamp.
-            currSelectedIdMap[id] = time; 
+            currSelectedIdMap[id] = time;
             dispatch({ type: ACTION_TYPES.UPDATE_FILTERED_EVENTS, payload: { filteredEvents: filteredResults } });
             dispatch({ type: ACTION_TYPES.UPDATE_SELECTED_EVENTS, payload: { selectedEvents: currentlySelectedEvents } });
             dispatch({ type: ACTION_TYPES.UPDATE_EVENT_COUNT, payload: { count: count + 1 } });
@@ -127,7 +159,7 @@ const SportsEventDashboard = () => {
              * Added functionality where once you select an item and then do search and then deselect the item from  selected item list,
              *  now it would again be part of search results
              */
-            if (filteredEvents) { 
+            if (filteredEvents) {
                 const currentFilteredItems = { ...filteredEvents }
                 currentFilteredItems[category].push(...selectedEvent);
                 dispatch({ type: ACTION_TYPES.UPDATE_FILTERED_EVENTS, payload: { filteredEvents: currentFilteredItems } });
