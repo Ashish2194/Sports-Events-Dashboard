@@ -8,7 +8,7 @@ You can view the deployed version at https://ashish2194.github.io/Sports-Events-
 2. You can select upto 3 events at max.
 3. You can remove the events already added.
 4. You cannot add any event that has clashing times.
-5. You can do search on event name.
+5. You can do search on event name and all events container will show the filtered results.
 6. This project has proper error management in place so you see an interactive fallback screen.
 7. This project is battle tested using Cypress.
 
